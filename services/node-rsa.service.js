@@ -55,12 +55,26 @@ class NodeRSAService {
   encrypt(plainText) {
     const rsa = new NodeRSA(this.publicKey);
     const cipher = rsa.encrypt(plainText, 'base64');
-    const directory = './exports/ciphers/';
-    const fileName = parseTimestampForFileName(new Date()) + '.txt';
+    const directory = './exports/logs/' + parseTimestampForFileName(new Date());
     if (!fs.existsSync(directory)) fs.mkdirSync(directory);
-    fs.writeFile(`${directory}${fileName}`, cipher, (err) => {
-      if (err) throw err;
+    fs.writeFile(`${directory}/cipher.txt`, cipher, (err) => {
       console.log('Created new Cipher');
+      if (err) throw err;
+    });
+    fs.writeFile(`${directory}/source.txt`, plainText, (err) => {
+      if (err) throw err;
+    });
+    fs.writeFile(`${directory}/public-key.pem`, this.publicKey, (err) => {
+      if (err) throw err;
+    });
+    fs.writeFile(`${directory}/private-key.pem`, this.privateKey, (err) => {
+      if (err) throw err;
+    });
+    fs.writeFile(`${directory}/public-key-to-copy-to-cli.pem`, this.publicKey.split('\n').join(''), (err) => {
+      if (err) throw err;
+    });
+    fs.writeFile(`${directory}/private-key-to-copy-to-cli.pem`, this.privateKey.split('\n').join(''), (err) => {
+      if (err) throw err;
     });
     return cipher;
   }
@@ -68,12 +82,26 @@ class NodeRSAService {
   decrypt(cipher) {
     const rsa = new NodeRSA(this.privateKey);
     const plainText = rsa.decrypt(cipher);
-    const directory = './exports/sources/';
-    const fileName = parseTimestampForFileName(new Date()) + '.txt';
+    const directory = './exports/logs/' + parseTimestampForFileName(new Date());;
     if (!fs.existsSync(directory)) fs.mkdirSync(directory);
-    fs.writeFile(`${directory}${fileName}`, plainText, (err) => {
+    fs.writeFile(`${directory}/cipher.txt`, cipher, (err) => {
+      if (err) throw err;
+    });
+    fs.writeFile(`${directory}/source.txt`, plainText, (err) => {
       if (err) throw err;
       console.log('Cipher decrypted successfully');
+    });
+    fs.writeFile(`${directory}/public-key.pem`, this.publicKey, (err) => {
+      if (err) throw err;
+    });
+    fs.writeFile(`${directory}/private-key.pem`, this.privateKey, (err) => {
+      if (err) throw err;
+    });
+    fs.writeFile(`${directory}/public-key-to-copy-to-cli.pem`, this.publicKey.split('\n').join(''), (err) => {
+      if (err) throw err;
+    });
+    fs.writeFile(`${directory}/private-key-to-copy-to-cli.pem`, this.privateKey.split('\n').join(''), (err) => {
+      if (err) throw err;
     });
     return plainText;
   }
