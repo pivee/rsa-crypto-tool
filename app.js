@@ -15,19 +15,36 @@ class App {
     console.log(chalk.yellow(`Launching ${this.name}... 🚀🚀🚀\n`));
     this.hasCustomKeys = await this.toggleHaveKeys();
     if (this.hasCustomKeys) {
-      console.log('What? You do???');
-      process.exit();
+      this.testType = await this.selectEncryptionOrDecryption();
+      switch (this.testType) {
+        case 'Encryption':
+          const customPublicKey = await this.inputCustomPublicKey();
+          this.rsaService.useCustomPublicKey(customPublicKey);
+          break;
+        case 'Decryption':
+          const customPrivateKey = await this.inputCustomPrivateKey();
+          this.rsaService.useCustomPrivateKey(customPrivateKey);
+          break;
+        default:
+          console.log('Something went wrong');
+          process.exit();
+      }
+      this.main();
     } else {
       this.shouldUseDefaultKeys = await this.selectUseDefaultKeys();
+      if (this.shouldUseDefaultKeys === 'No. Generate a new pair.') {
+        this.rsaService.generateKeyPair();
+        console.log('\nPublic Key:');
+        console.log(this.rsaService.publicKey);
+        console.log('\nPrivate Key:');
+        console.log(this.rsaService.privateKey, '\n');
+      }
+      this.testType = await this.selectEncryptionOrDecryption();
+      this.main();
     }
-    if (this.shouldUseDefaultKeys === 'No. Generate a new pair.') {
-      this.rsaService.generateKeyPair();
-      console.log('\nPublic Key:');
-      console.log(this.rsaService.publicKey);
-      console.log('\nPrivate Key:');
-      console.log(this.rsaService.privateKey, '\n');
-    }
-    this.testType = await this.selectEncryptionOrDecryption();
+  }
+
+  async main() {
     switch (this.testType) {
       case 'Encryption':
         this.testString = await this.inputTestString('encrypt');
@@ -87,6 +104,26 @@ class App {
   inputTestString(cryptoFunction) {
     const io = new Input({
       message: `Enter the string to ${cryptoFunction}\n`,
+      initial: ''
+    });
+    return io.run()
+      .then(answer => answer)
+      .catch(console.error);
+  }
+
+  inputCustomPublicKey() {
+    const io = new Input({
+      message: `Enter the Public Key\n`,
+      initial: ''
+    });
+    return io.run()
+      .then(answer => answer)
+      .catch(console.error);
+  }
+
+  inputCustomPrivateKey() {
+    const io = new Input({
+      message: `Enter the Private Key\n`,
       initial: ''
     });
     return io.run()

@@ -35,6 +35,14 @@ class NodeRSAService {
     this.privateKey = fs.readFileSync('./data/keys/default/private-key.pem', { encoding: 'utf8' });
   }
 
+  useCustomPublicKey(publicKey) {
+    this.publicKey = publicKey;
+  }
+
+  useCustomPrivateKey(privateKey) {
+    this.privateKey = privateKey;
+  }
+
   encrypt(plainText) {
     const rsa = new NodeRSA(this.publicKey);
     const cipher = rsa.encrypt(plainText, 'base64');
