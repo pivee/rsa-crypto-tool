@@ -18,11 +18,21 @@ class NodeRSAService {
     this.rsa = new NodeRSA({ b: keySize }, { encryptionScheme: encryptionScheme });
     this.publicKey = this.rsa.exportKey('pkcs1-public-pem');
     this.privateKey = this.rsa.exportKey('pkcs1-private-pem');
+    const directory = `./data/keys/${parseTimestampForFileName(new Date())}/`;
+    const fileNamePublic = 'public-key.pem';
+    const fileNamePrivate = 'private-key.pem';
+    if (!fs.existsSync(directory)) fs.mkdirSync(directory);
+    fs.writeFile(`${directory}${fileNamePublic}`, this.publicKey, (err) => {
+      if (err) throw err;
+    });
+    fs.writeFile(`${directory}${fileNamePrivate}`, this.privateKey, (err) => {
+      if (err) throw err;
+    });
   }
 
   useExistingKeyPair() {
-    this.publicKey = fs.readFileSync('./data/keys/public-key.pem', { encoding: 'utf8' });
-    this.privateKey = fs.readFileSync('./data/keys/private-key.pem', { encoding: 'utf8' });
+    this.publicKey = fs.readFileSync('./data/keys/default/public-key.pem', { encoding: 'utf8' });
+    this.privateKey = fs.readFileSync('./data/keys/default/private-key.pem', { encoding: 'utf8' });
   }
 
   encrypt(plainText) {
