@@ -131,7 +131,7 @@ class App {
     return io.run()
       .then(answer => {
         switch (answer) {
-          case 'PKCS1 with OAEO':
+          case 'PKCS1 with OAEP':
             return 'pkcs1_oaep';
           case 'PKCS1':
             return 'pkcs1';
