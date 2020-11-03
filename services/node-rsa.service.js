@@ -22,10 +22,10 @@ class NodeRSAService {
     const fileNamePublic = 'public-key.pem';
     const fileNamePrivate = 'private-key.pem';
     if (!fs.existsSync(directory)) fs.mkdirSync(directory);
-    fs.writeFile(`${directory}${fileNamePublic}`, this.publicKey, (err) => {
+    fs.writeFile(`${directory}${fileNamePublic}`, this.publicKey.split('\n').join(''), (err) => {
       if (err) throw err;
     });
-    fs.writeFile(`${directory}${fileNamePrivate}`, this.privateKey, (err) => {
+    fs.writeFile(`${directory}${fileNamePrivate}`, this.privateKey.split('\n').join(''), (err) => {
       if (err) throw err;
     });
   }
