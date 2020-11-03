@@ -4,13 +4,16 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "node index.js"
+    "start": "node index.js",
+    "encryption": "node services/encryption.service.js",
+    "decryption": "node services/decryption.service.js"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
     "chalk": "^4.1.0",
-    "enquirer": "^2.3.6"
+    "enquirer": "^2.3.6",
+    "node-rsa": "^1.1.1"
   }
 }
