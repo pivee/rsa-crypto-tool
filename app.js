@@ -109,7 +109,6 @@ class App {
       name: 'keySize',
       message: 'Select a bit size for the keys.',
       choices: [
-        '512',
         '1024',
         '2048',
         '4096',
