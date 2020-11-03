@@ -1,0 +1,5 @@
+{
+  "keySize": 2048,
+  "encryptionScheme": "pkcs1_oaep",
+  "signingScheme": "pkcs1-sha256"
+}
