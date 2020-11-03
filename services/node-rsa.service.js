@@ -18,7 +18,7 @@ class NodeRSAService {
     this.rsa = new NodeRSA({ b: keySize }, { encryptionScheme: encryptionScheme });
     this.publicKey = this.rsa.exportKey('pkcs1-public-pem');
     this.privateKey = this.rsa.exportKey('pkcs1-private-pem');
-    const directory = `./data/keys/${parseTimestampForFileName(new Date())}/`;
+    const directory = `./exports/keys/${parseTimestampForFileName(new Date())}/`;
     const fileNamePublic = 'public-key';
     const fileNamePrivate = 'private-key';
     if (!fs.existsSync(directory)) fs.mkdirSync(directory);
@@ -40,8 +40,8 @@ class NodeRSAService {
   }
 
   useExistingKeyPair() {
-    this.publicKey = fs.readFileSync('./data/keys/default/public-key.pem', { encoding: 'utf8' });
-    this.privateKey = fs.readFileSync('./data/keys/default/private-key.pem', { encoding: 'utf8' });
+    this.publicKey = fs.readFileSync('./initializers/keys/default/public-key.pem', { encoding: 'utf8' });
+    this.privateKey = fs.readFileSync('./initializers/keys/default/private-key.pem', { encoding: 'utf8' });
   }
 
   useCustomPublicKey(publicKey) {
@@ -55,7 +55,7 @@ class NodeRSAService {
   encrypt(plainText) {
     const rsa = new NodeRSA(this.publicKey);
     const cipher = rsa.encrypt(plainText, 'base64');
-    const directory = './data/ciphers/';
+    const directory = './exports/ciphers/';
     const fileName = parseTimestampForFileName(new Date()) + '.txt';
     if (!fs.existsSync(directory)) fs.mkdirSync(directory);
     fs.writeFile(`${directory}${fileName}`, cipher, (err) => {
@@ -68,7 +68,7 @@ class NodeRSAService {
   decrypt(cipher) {
     const rsa = new NodeRSA(this.privateKey);
     const plainText = rsa.decrypt(cipher);
-    const directory = './data/sources/';
+    const directory = './exports/sources/';
     const fileName = parseTimestampForFileName(new Date()) + '.txt';
     if (!fs.existsSync(directory)) fs.mkdirSync(directory);
     fs.writeFile(`${directory}${fileName}`, plainText, (err) => {
