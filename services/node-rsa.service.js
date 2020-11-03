@@ -22,6 +22,9 @@ class NodeRSAService {
     const fileNamePublic = 'public-key';
     const fileNamePrivate = 'private-key';
     if (!fs.existsSync(directory)) fs.mkdirSync(directory);
+    fs.writeFile(`${directory}options.json`, JSON.stringify({ keySize, encryptionScheme, signingScheme }), (err) => {
+      if (err) throw err;
+    });
     fs.writeFile(`${directory}${fileNamePublic}.pem`, this.publicKey, (err) => {
       if (err) throw err;
     });
