@@ -19,13 +19,19 @@ class NodeRSAService {
     this.publicKey = this.rsa.exportKey('pkcs1-public-pem');
     this.privateKey = this.rsa.exportKey('pkcs1-private-pem');
     const directory = `./data/keys/${parseTimestampForFileName(new Date())}/`;
-    const fileNamePublic = 'public-key.pem';
-    const fileNamePrivate = 'private-key.pem';
+    const fileNamePublic = 'public-key';
+    const fileNamePrivate = 'private-key';
     if (!fs.existsSync(directory)) fs.mkdirSync(directory);
-    fs.writeFile(`${directory}${fileNamePublic}`, this.publicKey.split('\n').join(''), (err) => {
+    fs.writeFile(`${directory}${fileNamePublic}.pem`, this.publicKey, (err) => {
       if (err) throw err;
     });
-    fs.writeFile(`${directory}${fileNamePrivate}`, this.privateKey.split('\n').join(''), (err) => {
+    fs.writeFile(`${directory}${fileNamePrivate}.pem`, this.privateKey, (err) => {
+      if (err) throw err;
+    });
+    fs.writeFile(`${directory}${fileNamePublic}-to-copy-to-cli.pem`, this.publicKey.split('\n').join(''), (err) => {
+      if (err) throw err;
+    });
+    fs.writeFile(`${directory}${fileNamePrivate}-to-copy-to-cli.pem`, this.privateKey.split('\n').join(''), (err) => {
       if (err) throw err;
     });
   }
