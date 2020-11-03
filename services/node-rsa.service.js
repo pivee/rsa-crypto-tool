@@ -5,6 +5,11 @@ const { parseTimestampForFileName } = require('../helpers/parseTimestampForFileN
 class NodeRSAService {
   publicKey = '';
   privateKey = '';
+  options = {
+    keySize: 1024,
+    encryptionScheme: 'pkcs1_oaep',
+    signingScheme: 'pkcs1-sha256'
+  };
 
   constructor({ useExistingKeyPair = false } = {}) {
     if (useExistingKeyPair) {
@@ -14,7 +19,14 @@ class NodeRSAService {
     }
   }
 
-  generateKeyPair({ keySize = 1024, encryptionScheme = 'pkcs1_oaep', signingScheme = 'pkcs1-sha256' } = {}) {
+  generateKeyPair({
+    keySize = this.options.keySize,
+    encryptionScheme = this.options.encryptionScheme,
+    signingScheme = this.options.signingScheme,
+  } = {}) {
+    this.options.keySize = keySize;
+    this.options.encryptionScheme = encryptionScheme;
+    this.options.signingScheme = signingScheme;
     this.rsa = new NodeRSA({ b: keySize }, { encryptionScheme: encryptionScheme });
     this.publicKey = this.rsa.exportKey('pkcs1-public-pem');
     this.privateKey = this.rsa.exportKey('pkcs1-private-pem');
@@ -57,6 +69,9 @@ class NodeRSAService {
     const cipher = rsa.encrypt(plainText, 'base64');
     const directory = './exports/logs/' + parseTimestampForFileName(new Date());
     if (!fs.existsSync(directory)) fs.mkdirSync(directory);
+    fs.writeFile(`${directory}/options.json`, JSON.stringify(this.options), (err) => {
+      if (err) throw err;
+    });
     fs.writeFile(`${directory}/cipher.txt`, cipher, (err) => {
       console.log('Created new Cipher');
       if (err) throw err;
@@ -84,6 +99,9 @@ class NodeRSAService {
     const plainText = rsa.decrypt(cipher);
     const directory = './exports/logs/' + parseTimestampForFileName(new Date());;
     if (!fs.existsSync(directory)) fs.mkdirSync(directory);
+    fs.writeFile(`${directory}/options.json`, JSON.stringify(this.options), (err) => {
+      if (err) throw err;
+    });
     fs.writeFile(`${directory}/cipher.txt`, cipher, (err) => {
       if (err) throw err;
     });
