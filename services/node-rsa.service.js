@@ -28,8 +28,8 @@ class NodeRSAService {
     this.options.encryptionScheme = encryptionScheme;
     this.options.signingScheme = signingScheme;
     this.rsa = new NodeRSA({ b: keySize }, { encryptionScheme: encryptionScheme });
-    this.publicKey = this.rsa.exportKey('pkcs1-public-pem');
-    this.privateKey = this.rsa.exportKey('pkcs1-private-pem');
+    this.publicKey = this.rsa.exportKey('pkcs8-public-pem');
+    this.privateKey = this.rsa.exportKey('pkcs8-private-pem');
     const directory = `./exports/keys/${parseTimestampForFileName(new Date())}/`;
     const fileNamePublic = 'public-key';
     const fileNamePrivate = 'private-key';
